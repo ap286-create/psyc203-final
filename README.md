@@ -9,8 +9,6 @@ Changes include:
 - 3D modified world
 - Incorporated PSYC 203 modules to fulfill project requirements
 
-Original repository: https://github.com/JamesLMilner/threejs-fps-controls
-
 ABENA MAKE A LIVE DEMO
 
 # Features
