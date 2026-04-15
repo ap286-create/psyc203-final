@@ -41,9 +41,11 @@ Then in your animation loop you just need to call the update controls method:
 controls.updateControls();
 ```
 
-# Contributing
-
-I would love contributions! Both in the form of issues, feature requests, usage examples and of course pull requests.
+# Credits
+3D Brain Model:
+"Human Brain" (https://skfb.ly/6ZRHv) by 3DRT STUDIOS is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+Brain Background used in "Click-to-Play" text (title design was created by Abena Poku, but the background used for the text is not mine):
+“Image.” Pinterest, https://www.pinterest.com/pin/2322237302740203/
 
 # License
 MIT
