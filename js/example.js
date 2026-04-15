@@ -158,9 +158,9 @@ var Harvest = (function () {
 				break;
 
 			case 32: // space
-				if (!isKeyDown) {
-					controls.jump();
-				}
+				//if (!isKeyDown) {
+				controls.jump();
+				//}
 				break;
 
             case 16: // shift

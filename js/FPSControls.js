@@ -232,22 +232,27 @@ THREE.PointerLockControls = function ( camera, mass, playerHeight, doubleJump, w
 				scope.velocity.y = Math.max( 0, scope.velocity.y );
 				scope.jumps = 0;
 
-				//If we start to fall through an object
-				// if ((this.getPlayer().position.y  < playerHeight) &&
-				// 	 scope.downwardsIntersection &&
-				// 	 scope.downwardsIntersection[0].distance < (playerHeight / 2) ) {
-				//
-				// 	 this.getPlayer().position.y += 0.1;
-				// }
+				/*If we start to fall through an object
+				 if ((this.getPlayer().position.y  < playerHeight) &&
+				 	 scope.downwardsIntersection &&
+				 	 scope.downwardsIntersection[0].distance < (playerHeight / 2) ) {
+				
+				 	 this.getPlayer().position.y += 0.1;
+				 }
 
 			} else {
-				this.walking = false;
+				this.walking = false; */
 			}
 
+			// allows for moving in mid air while jumping 
+			const minSpeed = 0.5; // small minimum to prevent dead zone
+			if (scope.velocity.x > 0 && scope.velocity.x < minSpeed) scope.velocity.x = minSpeed;
+			if (scope.velocity.x < 0 && scope.velocity.x > -minSpeed) scope.velocity.x = -minSpeed;
+			if (scope.velocity.z > 0 && scope.velocity.z < minSpeed) scope.velocity.z = minSpeed;
+			if (scope.velocity.z < 0 && scope.velocity.z > -minSpeed) scope.velocity.z = -minSpeed;
+
+			////////
 			// Crouched
-
-
-
 			if (!crouched && scope.isOnObject) {
 				console.log("Not Crouched");
 				halfHeight = scope.getPlayer().position.y - (playerHeight * 0.2);
@@ -287,15 +292,13 @@ THREE.PointerLockControls = function ( camera, mass, playerHeight, doubleJump, w
 				scope.walking = false;
 				scope.crouching = false;
 
-				if (scope.jumps === 0 && !scope.isBelowObject) {
-					scope.velocity.y += scope.jumpFactor * 2.3;
+				if (scope.isOnObject&& !scope.isBelowObject) {
+					scope.velocity.y = scope.jumpFactor * 2.3;
 					scope.velocity.z *= 2; // Jumping also increases our forward velocity a little
 					scope.jumps = 1;
+					scope.jumping = false;
 				}
-				else if (scope.doubleJump && scope.jumps === 1 && !scope.isOnObject && !scope.isBelowObject) {
-					scope.velocity.y += scope.jumpFactor * 1.5;
-					scope.jumps = 2;
-				}
+				// no dmore double jump :()
 
 			}
 
