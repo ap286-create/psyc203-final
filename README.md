@@ -1,8 +1,17 @@
-# FPS Controls for Three.js
-A 3D platformer game made with Three.js. The aim of the game is to the get to the top of the crates, at which point they will back to their rightful
-place on the moons surface in an orderly fashion.
+# Spring 2026 PSYC 203: Build-A-Brain Final Project
 
-[Here is a live demo](https://jamesmilneruk.github.io/threejs-fps-controls)
+This project is a modified version of 
+[threejs-fps-controls by JamesLMilner](https://github.com/JamesLMilner/threejs-fps-controls).
+
+Changes include:
+- Movement and jump behavior adjustments
+- Physics tweaks
+- 3D modified world
+- Incorporated PSYC 203 modules to fulfill project requirements
+
+Original repository: https://github.com/JamesLMilner/threejs-fps-controls
+
+ABENA MAKE A LIVE DEMO
 
 # Features
 The controls and demo are based on the [PointerLockControls](https://github.com/mrdoob/three.js/blob/master/examples/js/controls/PointerLockControls.js) given in the
