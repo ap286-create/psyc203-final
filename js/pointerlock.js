@@ -19,11 +19,9 @@ function ScreenOverlay(controls, controlsEnabled) {
 		} else {
 
 			controls.enabled = false;
+			controls.velocity.set(0, 0, 0);
 
-			blocker.style.display = '-webkit-box';
-			blocker.style.display = '-moz-box';
-			blocker.style.display = 'box';
-
+			blocker.style.display = 'flex';
 			instructions.style.display = '';
 
 		}

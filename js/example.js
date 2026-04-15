@@ -163,13 +163,6 @@ var Harvest = (function () {
 				//}
 				break;
 
-            case 16: // shift
-                controls.walk(boolean);
-                break;
-
-            case 67: // crouch (CTRL + W etc destroys tab in Chrome!)
-                controls.crouch(boolean);
-
 		}
 	}
 

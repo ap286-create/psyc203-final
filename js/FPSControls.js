@@ -170,15 +170,6 @@ THREE.PointerLockControls = function ( camera, mass, playerHeight, doubleJump, w
 
 	scope.jumps = 0;
 	scope.firstJump = true;
-	scope.walking = false;
-
-	// Crouched
-	scope.crouching = false;
-	var halfHeight;
-	var fullHeight;
-	var crouchSmoothing;
-	var smoothedHeight;
-	var crouched = false;
 
 	// Jump Variables
 	scope.jumping = false;
@@ -207,15 +198,14 @@ THREE.PointerLockControls = function ( camera, mass, playerHeight, doubleJump, w
 		scope.movements.unlock();
 
 		// Check change and if Walking?
-		scope.delta = (scope.walking) ? ( scope.time - scope.prevTime ) / scope.walkingSpeed : ( scope.time - scope.prevTime ) / scope.speed;
+		scope.delta = ( scope.time - scope.prevTime ) / scope.speed;
 		var validDelta = isNaN(scope.delta) === false;
 		if (validDelta) {
 
 			// Velocities
-			scope.velocity.x -= scope.velocity.x * 8.0 * scope.delta; // Left and right
-			scope.velocity.z -= scope.velocity.z * 8.0 * scope.delta; // Forward and back
-			scope.velocity.y -= (scope.walking) ?  9.8 * scope.mass * scope.delta : 5.5 * scope.mass * scope.delta;  // Up and Down
-
+			scope.velocity.x -= scope.velocity.x * 10.0 * scope.delta; // Left and right
+			scope.velocity.z -= scope.velocity.z * 10.0 * scope.delta; // Forward and back
+			scope.velocity.y -= 7.0 * scope.mass * scope.delta; //gravity up down jumping idrk
 			scope.camDir = scope.getPlayer().getWorldDirection().negate(); //
 			scope.playersPosition = scope.getPlayer().position.clone();
 
@@ -244,53 +234,47 @@ THREE.PointerLockControls = function ( camera, mass, playerHeight, doubleJump, w
 				this.walking = false; */
 			}
 
-			// allows for moving in mid air while jumping 
-			const minSpeed = 0.5; // small minimum to prevent dead zone
-			if (scope.velocity.x > 0 && scope.velocity.x < minSpeed) scope.velocity.x = minSpeed;
-			if (scope.velocity.x < 0 && scope.velocity.x > -minSpeed) scope.velocity.x = -minSpeed;
-			if (scope.velocity.z > 0 && scope.velocity.z < minSpeed) scope.velocity.z = minSpeed;
-			if (scope.velocity.z < 0 && scope.velocity.z > -minSpeed) scope.velocity.z = -minSpeed;
+			// fixes error how it drifts even when standing still
+			if (Math.abs(scope.velocity.x) < 0.1) scope.velocity.x = 0;
+			if (Math.abs(scope.velocity.z) < 0.1) scope.velocity.z = 0;
 
 			////////
-			// Crouched
-			if (!crouched && scope.isOnObject) {
-				console.log("Not Crouched");
-				halfHeight = scope.getPlayer().position.y - (playerHeight * 0.2);
-				fullHeight = scope.getPlayer().position.y + (playerHeight * 0.2);
-			}
+			// Disabled Crouched
+			// if (!crouched && scope.isOnObject) {
+			// 	console.log("Not Crouched");
+			// 	halfHeight = scope.getPlayer().position.y - (playerHeight * 0.2);
+			// 	fullHeight = scope.getPlayer().position.y + (playerHeight * 0.2);
+			// }
 
-			if (scope.crouching && scope.isOnObject) {
+			// if (scope.crouching && scope.isOnObject) {
 
-				scope.walking = true;
-				if (!crouched && !scope.justCrouched) {
-					scope.updatePlayerHeight(halfHeight);
-					crouchSmoothing = 0;
-					smoothedHeight = 0;
-					crouched = true;
+			// 	scope.walking = true;
+			// 	if (!crouched && !scope.justCrouched) {
+			// 		scope.updatePlayerHeight(halfHeight);
+			// 		crouchSmoothing = 0;
+			// 		smoothedHeight = 0;
+			// 		crouched = true;
 
-					 // Stop people from crouching through the floor
-					scope.justCrouched = true;
-					setTimeout(function() { scope.justCrouched = false; }, 300);
-				}
+			// 		 // Stop people from crouching through the floor
+			// 		scope.justCrouched = true;
+			// 		setTimeout(function() { scope.justCrouched = false; }, 300);
+			// 	}
 
-			} else if (!scope.crouching && smoothedHeight <= fullHeight ){
+			// } else if (!scope.crouching && smoothedHeight <= fullHeight ){
 
-				// Smooth out of crouching
-				console.log("finished");
-				smoothedHeight = halfHeight + crouchSmoothing;
-				scope.updatePlayerHeight(smoothedHeight);
-				crouchSmoothing += 2;
-					//console.log(smoothedHeight)
-				crouched = false;
-				scope.walking = false;
+			// 	// Smooth out of crouching
+			// 	console.log("finished");
+			// 	smoothedHeight = halfHeight + crouchSmoothing;
+			// 	scope.updatePlayerHeight(smoothedHeight);
+			// 	crouchSmoothing += 2;
+			// 		//console.log(smoothedHeight)
+			// 	crouched = false;
+			// 	scope.walking = false;
 
-			}
+			// }
 
 			// Jumping - must come after isBelowObject but before isOnObject
 			if (scope.jumping) {
-
-				scope.walking = false;
-				scope.crouching = false;
 
 				if (scope.isOnObject&& !scope.isBelowObject) {
 					scope.velocity.y = scope.jumpFactor * 2.3;
@@ -298,17 +282,16 @@ THREE.PointerLockControls = function ( camera, mass, playerHeight, doubleJump, w
 					scope.jumps = 1;
 					scope.jumping = false;
 				}
-				// no dmore double jump :()
+				// no more double jump :(
 
 			}
 
 			// Movements
 
-			if ( scope.movements.forward && !scope.walking && !scope.movements.locks.forward) scope.velocity.z -= 400.0 * scope.delta;
-			if ( scope.movements.forward && scope.walking && !scope.movements.locks.forward) scope.velocity.z -= 1000.0 * scope.delta;
-			if ( scope.movements.backward && !scope.movements.locks.backward ) scope.velocity.z += 400.0 * scope.delta;
-			if ( scope.movements.left && !scope.movements.locks.left ) scope.velocity.x -= 400.0 * scope.delta;
-			if ( scope.movements.right && !scope.movements.locks.right ) scope.velocity.x += 400.0 * scope.delta;
+			if ( scope.movements.forward && !scope.movements.locks.forward) scope.velocity.z -= 550.0 * scope.delta;
+			if ( scope.movements.backward && !scope.movements.locks.backward ) scope.velocity.z += 550.0 * scope.delta;
+			if ( scope.movements.left && !scope.movements.locks.left ) scope.velocity.x -= 550.0 * scope.delta;
+			if ( scope.movements.right && !scope.movements.locks.right ) scope.velocity.x += 550.0 * scope.delta;
 
 
 			// Velocity translations
